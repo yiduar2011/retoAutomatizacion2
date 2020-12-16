@@ -1,0 +1,164 @@
+{
+	"info": {
+		"_postman_id": "509c3648-101d-4adc-943e-c2a334ebea3f",
+		"name": "Entregable 2.1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "Crear Cliente",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6810a549-7bee-473c-82bd-a2aca4bed6f1",
+						"exec": [
+							"console.log('Ejecucion...')\r",
+							"var numeroActual = parseInt(postman.getEnvironmentVariable('IdCedula'))+1;\r",
+							"console.log(\"Numero: \"+numeroActual);\r",
+							"postman.setEnvironmentVariable('IdCedula',numeroActual);\r",
+							"\r",
+							"var correo = pm.variables.replaceIn(\"{{$randomEmail}}\");\r",
+							"console.log('Correo: ',correo);\r",
+							"postman.setEnvironmentVariable('IdCorreo',correo);\r",
+							"\r",
+							"var telefono = Math.floor(Math.random() * (3239999999 - 3010000001)) + 3010000001;\r",
+							"console.log('telefono: ',telefono);\r",
+							"postman.setEnvironmentVariable('IdTelefono',telefono);"
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "758ce11f-6f0e-4326-9049-ee770857ed04",
+						"exec": [
+							"var jsonData = pm.response.json();\r",
+							"\r",
+							"pm.test(\"Status Correcto\", function() {\r",
+							"    pm.response.to.be.ok;\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Response time is less than 200ms\", function () {\r",
+							"    pm.expect(pm.response.responseTime).to.be.below(200);\r",
+							"});\r",
+							"\r",
+							"pm.test(\"Comparar idcedula \"+jsonData.idCedula, function () {\r",
+							"    var cedula = parseInt(postman.getEnvironmentVariable('IdCedula'),10);\r",
+							"    pm.expect(jsonData.idCedula).to.eql(cedula);\r",
+							"});\r",
+							" \r",
+							"pm.test(\"Comparar celular \"+ jsonData.celular, function () {\r",
+							"    var celularr = postman.getEnvironmentVariable('IdTelefono');\r",
+							"    pm.expect(jsonData.celular).to.eql(celularr);\r",
+							"});\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"request": {
+				"method": "POST",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"idCedula\": {{IdCedula}},\r\n    \"correo\": \"{{IdCorreo}}\",\r\n    \"celular\": \"{{IdTelefono}}\",\r\n    \"tipo\": {\r\n        \"id\": 1,\r\n        \"tipoDocumento\": \"Cédula de ciudadanía\"\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/RegistroClientes/guardar",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"RegistroClientes",
+						"guardar"
+					]
+				},
+				"description": "Este request es para crear los clientes"
+			},
+			"response": []
+		},
+		{
+			"name": "Consultar Tipo Documento",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"id": "6810a549-7bee-473c-82bd-a2aca4bed6f1",
+						"exec": [
+							""
+						],
+						"type": "text/javascript"
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"id": "758ce11f-6f0e-4326-9049-ee770857ed04",
+						"exec": [
+							"pm.test(\"Status Correcto\", function() {\r",
+							"    pm.response.to.be.ok;\r",
+							"});\r",
+							"\r",
+							""
+						],
+						"type": "text/javascript"
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"method": "GET",
+				"header": [
+					{
+						"key": "",
+						"value": "",
+						"type": "text",
+						"disabled": true
+					}
+				],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/RegistroClientes/tipo",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"RegistroClientes",
+						"tipo"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"protocolProfileBehavior": {}
+}
